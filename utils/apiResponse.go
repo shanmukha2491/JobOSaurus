@@ -4,9 +4,9 @@ type ApiResponse struct {
 	StatusCode int
 	Message    string
 	Payload    interface{}
-	Status     bool
+	Success    bool
 }
 
 func NewApiResponse(StatusCode int, Message string, Payload interface{}) ApiResponse {
-	return ApiResponse{StatusCode: StatusCode, Message: Message, Payload: Payload, Status: StatusCode < 400}
+	return ApiResponse{StatusCode: StatusCode, Message: Message, Payload: Payload, Success: StatusCode < 400}
 }

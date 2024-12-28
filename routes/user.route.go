@@ -20,4 +20,6 @@ func RegisterUserRoutes(router *mux.Router) {
 
 	// Route for creating a user (POST request)
 	router.HandleFunc("/v1/user", handler.CreateUser).Methods(http.MethodPost)
+
+	router.HandleFunc("/v1/user/login", handler.LoginUser).Methods(http.MethodPost)
 }

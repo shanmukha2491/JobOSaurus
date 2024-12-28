@@ -20,7 +20,7 @@ func ConnectMongo() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-
+	
 	mongoUrl := os.Getenv("MONGO_URL")
 	if mongoUrl == "" {
 		log.Fatalf("MONGO_URL environment variable not set")
