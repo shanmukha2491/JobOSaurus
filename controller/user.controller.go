@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"JobTracker/auth"
 	db "JobTracker/database"
 	"JobTracker/models"
 	"JobTracker/utils"
@@ -19,6 +20,13 @@ func CreateUser(rw http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	token, err := auth.GenerateToken(newUser.Username)
+	if err != nil {
+		http.Error(rw, "Error creating token", http.StatusInternalServerError)
+		return
+	}
+
+	newUser.Token = token
 	err = db.InsertOne(newUser)
 	if err != nil {
 		http.Error(rw, "Error creating user", http.StatusInternalServerError)
@@ -67,4 +75,29 @@ func LoginUser(rw http.ResponseWriter, r *http.Request) {
 		http.Error(rw, "Internal Server Problem", http.StatusInternalServerError)
 		return
 	}
+}
+
+func CreateJob(rw http.ResponseWriter, r *http.Request) {
+
+	var newJob models.Job
+	err := json.NewDecoder(r.Body).Decode(&newJob)
+	if err != nil {
+		http.Error(rw, "Invalid user details", http.StatusBadRequest)
+		return
+	}
+
+	err = db.CreateJob(newJob)
+	if err != nil {
+		http.Error(rw, "Error creating user", http.StatusInternalServerError)
+		return
+	}
+
+	rw.Header().Set("Content-Type", "application/json")
+	rw.WriteHeader(http.StatusCreated)
+	err = json.NewEncoder(rw).Encode(utils.NewApiResponse(201, "Successfully Created Job", newJob))
+	if err != nil {
+		http.Error(rw, "Internal Server Problem", http.StatusInternalServerError)
+		return
+	}
+
 }
